@@ -1,6 +1,6 @@
 {
   "PYTHON_SCRIPT_DIR": "D:/human_retargeting/unreal-humans/retargeting/Content/Python",
-  "UNREAL_APP_PATH": "D:\\UE_5.4\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+  "UNREAL_APP_PATH": "D:\\UE_5.3\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
   "UNREAL_PROJECT_PATH": "D:\\human_retargeting\\unreal-humans\\retargeting\\retargeting.uproject",
   "BLENDER_APP_PATH": "C:\\Program Files\\Blender Foundation\\Blender 4.2\\blender.exe"
 }
