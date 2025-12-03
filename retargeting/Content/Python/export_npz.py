@@ -18,8 +18,8 @@ from pathlib import Path
 import sys
 import os
 import unreal
-import pickle
 
+NUM_BETAS = 16
 
 SMPLX_JOINT_NAMES = [
     'pelvis', 'left_hip', 'right_hip', 'spine1', 'left_knee', 'right_knee', 'spine2', 'left_ankle',
@@ -33,18 +33,27 @@ SMPLX_JOINT_NAMES = [
 ]
 
 
-def find_first_npz(npz_input_dir, target_name, file_name="motion_seq.npz"):
-    for root, dirs, files in os.walk(npz_input_dir):
-        if target_name in dirs:
-            target_dir = os.path.join(root, target_name)
-            for subroot, subdirs, subfiles in os.walk(target_dir):
-                for file in subfiles:
-                    if file == file_name:
-                        return os.path.join(subroot, file)
-    return None
+def get_betas_from_npz_dir(npz_input_dir, target_name):
+    betas = np.zeros(10)
+    npz_files = list(npz_input_dir.rglob("*.npz"))
+    for npz_file in npz_files:
+        npz_basename = npz_file.stem
+        if npz_basename == target_name:
+            unreal.log(" Found betas for target.")
+            data = np.load(str(npz_file))
+            if "betas" in data:
+                betas = data["betas"]
+            else:
+                unreal.log(" No betas found in .npz file. Using zeros.")
+            break
+
+    if np.all(betas == 0):
+        unreal.log(" No betas found for target. Using zeros.")
+
+    return betas
 
 
-def export_to_npz(anim_sequence, out_dir, betas_dict=None):
+def export_to_npz(anim_sequence, out_dir, _betas_npz_dir=None):
     dmi = anim_sequence.data_model_interface
 
     last_frame_index = dmi.get_number_of_frames()  # Will return index of last frame (5.4)
@@ -60,19 +69,6 @@ def export_to_npz(anim_sequence, out_dir, betas_dict=None):
                                                optional_skeletal_mesh=None,
                                                retrieve_additive_as_full_pose=False,
                                                evaluate_curves=False)
-
-    # (OPTIONAL) Load betas from .pkl if available
-    betas = np.zeros(10)
-    if betas_dict is not None:
-        # The naming convention is: <target_name>+<source_name>_Anim
-        target_name = anim_sequence.get_name().split('+')[0]
-        unreal.log("Target name: " + target_name)
-        # The betas_dict is a dictionary with the target_name as key
-        if target_name in betas_dict:
-            unreal.log(" Found betas for target.")
-            betas = betas_dict[target_name]
-        else:
-            unreal.log(" No betas found for target. Using zeros.")
 
     trans = []
     poses = []
@@ -106,6 +102,12 @@ def export_to_npz(anim_sequence, out_dir, betas_dict=None):
 
         poses.append(smplx_pose)
 
+    betas = np.zeros(NUM_BETAS)
+    if _betas_npz_dir is not None:
+        target_name = anim_sequence.get_name().split('+')[0]
+        unreal.log("Target name: " + target_name)
+        betas = get_betas_from_npz_dir(Path(_betas_npz_dir), target_name)
+
     data = {}
     data["gender"] = "neutral"
     data["mocap_frame_rate"] = mocap_frame_rate
@@ -127,23 +129,16 @@ if __name__ == '__main__':
     unreal.log(f"======================================================================")
     unreal.log(f"Running {__file__}")
     _output_root_dir = Path(sys.argv[1])
-    _use_betas_from_pkl_file = bool(int(sys.argv[2]))
+    _use_betas = bool(int(sys.argv[2]))
+    _betas_npz_dir = None
 
-    # Load pkl file with the betas (key is the target_name)
-    _betas_pkl = None
-    if _use_betas_from_pkl_file:
+    # Load betas from .npz files
+    if _use_betas:
         _output_dir = Path(sys.argv[1]).joinpath("npz_with_betas")
         if len(sys.argv) < 4:
             unreal.log_error("Missing input betas .pkl filepath")
             sys.exit(1)
-        _betas_pkl_filepath = sys.argv[3]
-        try:
-            with open(_betas_pkl_filepath, "rb") as f:
-                _betas_pkl = pickle.load(f)
-        except Exception as e:
-            unreal.log_error(f"Failed to load betas .pkl file: {e}")
-            unreal.log_error(f"Please run again without the betas.")
-            sys.exit(1)
+        _betas_npz_dir = sys.argv[3]
     else:
         _output_dir = Path(sys.argv[1]).joinpath("npz_without_betas")
 
@@ -160,7 +155,7 @@ if __name__ == '__main__':
             unreal.log_warning(" Skipping (not an AnimSequence)")
             continue
 
-        status = export_to_npz(_asset, _output_dir, _betas_pkl)
+        status = export_to_npz(_asset, _output_dir, _betas_npz_dir)
 
         if not status:
             unreal.log_error("Failure")

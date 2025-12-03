@@ -1,1 +1,3 @@
 .idea
+body_models/*.npz
+data

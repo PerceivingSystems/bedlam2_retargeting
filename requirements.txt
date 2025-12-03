@@ -1,0 +1,4 @@
+smplx
+torch
+bpy
+# Instead of bpy, for windows use a wheel from https://download.blender.org/pypi/bpy/
