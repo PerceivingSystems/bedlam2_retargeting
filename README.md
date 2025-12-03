@@ -8,7 +8,9 @@ for [BEDLAM 2.0 NeurIPS 2025](https://bedlam2.is.tuebingen.mpg.de/), built
 on [Unreal Engine's IK Retargeter](https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-animation-retargeting-in-unreal-engine?application_version=5.3)
 by Epic Games.
 
-We provide two branches: `5.3` and `5.4`. Switch to the desired branch based on your Unreal Engine version.
+We provide two branches: `5.3` and `5.4`.
+
+Switch to the desired branch based on your Unreal Engine version: `git checkout 5.3  # or 5.4`
 
 For the latest UE retargeting features, visit
 the [Unreal Engine documentation](https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-animation-retargeting-in-unreal-engine).
