@@ -29,7 +29,7 @@ the [Unreal Engine documentation](https://dev.epicgames.com/documentation/en-us/
 
 1. Open the project in Unreal Engine.
 2. Enable the widget: Right-Click on the `Widgets/HumanEngineWidget` and select `Run Editor Utility Widget`.
-
+3. Edit the `paths.json` file to set your own paths.
 
 ![widget.png](docs/widget.png)
 
