@@ -15,6 +15,8 @@ Switch to the desired branch based on your Unreal Engine version: `git checkout 
 For the latest UE retargeting features, visit
 the [Unreal Engine documentation](https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-animation-retargeting-in-unreal-engine).
 
+For the rendering pipeline of BEDLAM 2.0 and other useful tools, please refer to the [BEDLAM2 Render Tools](https://github.com/PerceivingSystems/bedlam2_render/tree/main/blender/smplx_anim_to_fbx).
+
 ## Requirements:
 
 - [Unreal Engine](https://www.unrealengine.com/) 5.3 or 5.4 _(please switch to the desired branch)_
@@ -43,6 +45,7 @@ Use the [SMPL-X Blender add-on (20241129 or later)](https://smpl-x.is.tue.mpg.de
 - `animations` directory with `.fbx` files (source animations).
 - `bodies` directory with `.fbx` and corresponding `.npz` files (target bodies).
 
+For converting to `.fbx` files, use the following script, or the [BEDLAM2 Render Tools (smplx_anim_to_fbx)](https://github.com/PerceivingSystems/bedlam2_render/tree/main/blender/smplx_anim_to_fbx) code.
 ```bash
 # Make source animation FBX files from NPZ files (animations dir)
 python make_fbx_files.py --input_dir <input_npz_dir> --output_dir <output_fbx_dir>
