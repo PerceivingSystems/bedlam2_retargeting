@@ -15,7 +15,7 @@ Switch to the desired branch based on your Unreal Engine version: `git checkout 
 For the latest UE retargeting features, visit
 the [Unreal Engine documentation](https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-animation-retargeting-in-unreal-engine).
 
-For the rendering pipeline of BEDLAM 2.0 and other useful tools, please refer to the [BEDLAM2 Render Tools](https://github.com/PerceivingSystems/bedlam2_render/tree/main/blender/smplx_anim_to_fbx).
+For the rendering pipeline of BEDLAM 2.0 and other useful tools, please refer to the [BEDLAM2 Render Tools](https://github.com/PerceivingSystems/bedlam2_render).
 
 ## Requirements:
 
